@@ -5,7 +5,7 @@ import UserInformation from "./pages/LoginSignUp/UserInformation.jsx";
 import Home from "./pages/home/Home.jsx";
 import Info from "./pages/info/Info.jsx";
 // import Todos from "./pages/todos/Todos.jsx";
-// import Posts from "./pages/posts/Posts.jsx";
+import Posts from "./pages/posts/Posts.jsx";
 // import Albums from "./pages/albums/Albums.jsx";
 
 function App() {
@@ -17,8 +17,8 @@ function App() {
       <Route path="/users/:userId/userInformation" element={<UserInformation />} />
       <Route path="/users/:userId/home" element={<Home />}>
         <Route path="info" element={<Info />} />
-        {/* <Route path="todos" element={<Todos />} />
         <Route path="posts" element={<Posts />} />
+        {/* <Route path="todos" element={<Todos />} />
         <Route path="albums" element={<Albums />} /> */}
       </Route>
 
