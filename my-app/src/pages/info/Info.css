@@ -1,0 +1,44 @@
+.info-container {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.info-container h2 {
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.info-item {
+  background: #f9fafb;
+  padding: 14px 16px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.info-label {
+  font-weight: bold;
+  color: #374151;
+}
+
+.info-value {
+  color: #111827;
+}
+
+.info-status {
+  margin-top: 20px;
+  color: #374151;
+}
+
+.info-error {
+  margin-top: 20px;
+  color: #dc2626;
+  font-weight: bold;
+}

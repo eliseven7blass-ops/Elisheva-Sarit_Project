@@ -1,0 +1,59 @@
+.side-menu {
+  width: 60px;
+  background-color: #1f2937;
+  color: white;
+  padding: 15px 10px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+.side-menu:hover {
+  width: 220px;
+}
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+.hamburger span {
+  height: 3px;
+  width: 30px;
+  background-color: white;
+  border-radius: 2px;
+}
+.menu-content {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.side-menu:hover .menu-content {
+  opacity: 1;
+}
+.user-name {
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.side-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.side-menu a,
+.side-menu button {
+  background: none;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.side-menu a:hover,
+.side-menu button:hover {
+  text-decoration: underline;
+}
