@@ -1,11 +1,6 @@
-const BASE_URL = "http://localhost:3001";
+// api/CommentsAPI.js
+import { api } from "./restClient";
 
-export async function getCommentsByPostId(postId) {
-  const res = await fetch(`${BASE_URL}/comments?postId=${postId}`);
-
-  if (!res.ok) {
-    throw new Error("לא הצלחתי להביא תגובות מהשרת");
-  }
-
-  return res.json(); // מערך תגובות
+export function getCommentsByPostId(postId) {
+  return api.get(`/comments?postId=${postId}`);
 }

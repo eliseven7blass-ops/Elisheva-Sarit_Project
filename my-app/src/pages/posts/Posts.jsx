@@ -1,9 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPostsByUserId } from "../api/PostsAPI";
-import "./Posts.css";
 import { filterByIdTitle } from "../../utils/filterByIdTitle";
+import "./Posts.css";
 
+import PostsFilters from "./PostsFilters";
+import PostsList from "./PostsList";
+import PostDetails from "./PostDetails";
+
+import { createPost, deletePost, updatePost } from "../api/PostsAPI";
+import AddPostForm from "./AddPostForm";
 
 
 function Posts() {
@@ -16,10 +22,13 @@ function Posts() {
     const [searchId, setSearchId] = useState("");
     const [searchTitle, setSearchTitle] = useState("");
     const [selectedPostId, setSelectedPostId] = useState(null);
+    const [showComments, setShowComments] = useState(false);
 
     const detailsRef = useRef(null);
+    const commentsRef = useRef(null);
 
-    useEffect(() => {      // גלילה אוטומטית 
+    // גלילה אוטומטית
+    useEffect(() => {
         if (!selectedPostId) return;
 
         detailsRef.current?.scrollIntoView({
@@ -27,6 +36,16 @@ function Posts() {
             block: "start"
         });
     }, [selectedPostId]);
+
+    useEffect(() => {
+        if (!showComments || !selectedPostId) return;
+
+        commentsRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    }, [showComments, selectedPostId]);
+
 
 
     useEffect(() => {
@@ -53,6 +72,29 @@ function Posts() {
 
     const selectedPost = posts.find((p) => String(p.id) === String(selectedPostId));
 
+    function handleSelectPost(postId) {
+        setSelectedPostId(postId);
+        setShowComments(false);
+    }
+
+    function toggleComments() {
+        setShowComments((prev) => !prev);
+    }
+
+    async function handleAddPost({ title, body }) {
+
+        try {
+            const newPost = await createPost(userId, title, body);
+
+            // נוסף לראש הרשימה כדי שיראו מיד
+            setPosts((prev) => [newPost, ...prev]);
+        } catch (e) {
+            console.error(e);
+            alert("לא הצלחתי להוסיף פוסט");
+        }
+
+    }
+
 
     if (loading) return <p className="posts-status">טוען פוסטים...</p>;
     if (error) return <p className="posts-error">{error}</p>;
@@ -61,66 +103,29 @@ function Posts() {
         <div className="posts-container">
             <h2>Posts</h2>
 
-            <div className="posts-filters">
-                <input
-                    type="text"
-                    placeholder="חיפוש לפי id"
-                    value={searchId}
-                    onChange={(e) => setSearchId(e.target.value)}
-                />
+            <AddPostForm onAdd={handleAddPost} />
 
-                <input
-                    type="text"
-                    placeholder="חיפוש לפי כותרת"
-                    value={searchTitle}
-                    onChange={(e) => setSearchTitle(e.target.value)}
-                />
-            </div>
+            <PostsFilters
+                searchId={searchId}
+                setSearchId={setSearchId}
+                searchTitle={searchTitle}
+                setSearchTitle={setSearchTitle}
+            />
 
-            {filteredPosts.length === 0 ? (
-                <p className="posts-status">לא נמצאו פוסטים.</p>
-            ) : (
-                <ul className="posts-list">
-                    {filteredPosts.map((post) => {
-                        const isSelected = String(post.id) === String(selectedPostId);
+            <PostsList
+                posts={filteredPosts}
+                selectedPostId={selectedPostId}
+                onSelect={handleSelectPost}
+            />
 
-                        return (
-                            <li
-                                key={post.id}
-                                className={`posts-item ${isSelected ? "selected" : ""}`}
-                            >
-                                <div className="posts-left">
-                                    <span className="posts-id">#{post.id}</span>
-                                    <span className="posts-title">{post.title}</span>
-                                </div>
-
-                                <button
-                                    className="posts-select-btn"
-                                    onClick={() => setSelectedPostId(post.id)}
-                                >
-                                    {isSelected ? "נבחר" : "בחר"}
-                                </button>
-                            </li>
-                        );
-                    })}
-                </ul>
-
-            )}
-
-            <div ref={detailsRef} className="post-details">
-                {!selectedPost ? (
-                    <p className="posts-status">בחר פוסט כדי לראות את התוכן שלו.</p>
-                ) : (
-                    <>
-                        <h3>פוסט נבחר: #{selectedPost.id}</h3>
-                        <p className="post-details-title">{selectedPost.title}</p>
-                        <p className="post-details-body">{selectedPost.body}</p>
-                    </>
-                )}
-            </div>
-
+            <PostDetails
+                selectedPost={selectedPost}
+                detailsRef={detailsRef}
+                commentsRef={commentsRef}
+                showComments={showComments}
+                toggleComments={toggleComments}
+            />
         </div>
-
     );
 }
 

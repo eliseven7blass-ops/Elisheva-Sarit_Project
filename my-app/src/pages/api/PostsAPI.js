@@ -1,11 +1,17 @@
-const BASE_URL = "http://localhost:3001";
+import { api } from "../api/restClient";
 
-export async function getPostsByUserId(userId) {
-  const res = await fetch(`${BASE_URL}/posts?userId=${userId}`);
+export function getPostsByUserId(userId) {
+  return api.get(`/posts?userId=${userId}`);
+}
 
-  if (!res.ok) {
-    throw new Error("לא הצלחתי להביא פוסטים מהשרת");
-  }
+export function createPost(userId, title, body) {
+  return api.post(`/posts`, { userId: Number(userId), title, body });
+}
 
-  return res.json(); // מחזיר מערך posts
+export function updatePost(postId, updates) {
+  return api.patch(`/posts/${postId}`, updates);
+}
+
+export function deletePost(postId) {
+  return api.del(`/posts/${postId}`);
 }
