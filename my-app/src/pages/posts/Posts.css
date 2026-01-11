@@ -141,3 +141,16 @@
   border-color: #4f46e5;
 }
 
+.posts-delete-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #dc2626;
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+}
+.posts-delete-btn:hover {
+  background: #b91c1c;
+}
+

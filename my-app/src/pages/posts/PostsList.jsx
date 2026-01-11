@@ -1,34 +1,42 @@
-function PostsList({ posts, selectedPostId, onSelect }) {
-  if (posts.length === 0) {
-    return <p className="posts-status">לא נמצאו פוסטים.</p>;
-  }
+function PostsList({ posts, selectedPostId, onSelect, onDelete }) {
+    if (posts.length === 0) {
+        return <p className="posts-status">לא נמצאו פוסטים.</p>;
+    }
 
-  return (
-    <ul className="posts-list">
-      {posts.map((post) => {
-        const isSelected = String(post.id) === String(selectedPostId);
+    return (
+        <ul className="posts-list">
+            {posts.map((post) => {
+                const isSelected = String(post.id) === String(selectedPostId);
 
-        return (
-          <li
-            key={post.id}
-            className={`posts-item ${isSelected ? "selected" : ""}`}
-          >
-            <div className="posts-left">
-              <span className="posts-id">#{post.id}</span>
-              <span className="posts-title">{post.title}</span>
-            </div>
+                return (
+                    <li
+                        key={post.id}
+                        className={`posts-item ${isSelected ? "selected" : ""}`}
+                    >
+                        <div className="posts-left">
+                            <span className="posts-id">#{post.id}</span>
+                            <span className="posts-title">{post.title}</span>
+                        </div>
 
-            <button
-              className="posts-select-btn"
-              onClick={() => onSelect(post.id)}
-            >
-              {isSelected ? "נבחר" : "בחר"}
-            </button>
-          </li>
-        );
-      })}
-    </ul>
-  );
+                        <button
+                            className="posts-select-btn"
+                            onClick={() => onSelect(post.id)}
+                        >
+                            {isSelected ? "נבחר" : "בחר"}
+                        </button>
+
+                        <button
+                            className="posts-delete-btn"
+                            onClick={() => onDelete(post.id)}
+                        >
+                            מחק
+                        </button>
+
+                    </li>
+                );
+            })}
+        </ul>
+    );
 }
 
 export default PostsList;

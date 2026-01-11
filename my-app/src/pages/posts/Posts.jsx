@@ -10,6 +10,7 @@ import PostDetails from "./PostDetails";
 
 import { createPost, deletePost, updatePost } from "../api/PostsAPI";
 import AddPostForm from "./AddPostForm";
+import EditPostForm from "./EditPostForm";
 
 
 function Posts() {
@@ -23,6 +24,8 @@ function Posts() {
     const [searchTitle, setSearchTitle] = useState("");
     const [selectedPostId, setSelectedPostId] = useState(null);
     const [showComments, setShowComments] = useState(false);
+
+    const [isEditing, setIsEditing] = useState(false);
 
     const detailsRef = useRef(null);
     const commentsRef = useRef(null);
@@ -75,24 +78,66 @@ function Posts() {
     function handleSelectPost(postId) {
         setSelectedPostId(postId);
         setShowComments(false);
+        setIsEditing(false);
     }
 
     function toggleComments() {
         setShowComments((prev) => !prev);
     }
 
+
     async function handleAddPost({ title, body }) {
 
         try {
             const newPost = await createPost(userId, title, body);
 
-            // נוסף לראש הרשימה כדי שיראו מיד
+            // נוסף לראש הרשימה 
             setPosts((prev) => [newPost, ...prev]);
         } catch (e) {
             console.error(e);
             alert("לא הצלחתי להוסיף פוסט");
         }
 
+    }
+
+    async function handleSaveEdit({ title, body }) {
+        try {
+            if (!selectedPost) {
+                alert("לא נבחר פוסט");
+                return;
+            }
+
+            const updated = await updatePost(selectedPost.id, { title, body });
+
+            setPosts((prev) =>
+                prev.map((p) => (String(p.id) === String(updated.id) ? updated : p))
+            );
+
+            setIsEditing(false);
+        } catch (e) {
+            console.error(e);
+            alert("לא הצלחתי לעדכן פוסט");
+        }
+    }
+
+
+    async function handleDeletePost(postId) {
+        const ok = confirm("בטוח למחוק את הפוסט?");
+        if (!ok) return;
+
+        try {
+            await deletePost(postId);
+
+            setPosts((prev) => prev.filter((p) => String(p.id) !== String(postId)));
+
+            if (String(selectedPostId) === String(postId)) {
+                setSelectedPostId(null);
+                setShowComments(false);
+            }
+        } catch (e) {
+            console.error(e);
+            alert("לא הצלחתי למחוק פוסט");
+        }
     }
 
 
@@ -116,6 +161,7 @@ function Posts() {
                 posts={filteredPosts}
                 selectedPostId={selectedPostId}
                 onSelect={handleSelectPost}
+                onDelete={handleDeletePost}
             />
 
             <PostDetails
@@ -124,7 +170,13 @@ function Posts() {
                 commentsRef={commentsRef}
                 showComments={showComments}
                 toggleComments={toggleComments}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                onDelete={handleDeletePost}
+                onSave={handleSaveEdit}
             />
+
+
         </div>
     );
 }
