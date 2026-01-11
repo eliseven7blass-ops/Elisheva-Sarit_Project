@@ -1,5 +1,5 @@
 import EditPostForm from "./EditPostForm";
-import Comments from "./Comments";
+import Comments from "./comments/Comments";
 
 function PostDetails({
   selectedPost,

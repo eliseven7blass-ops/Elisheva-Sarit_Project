@@ -1,14 +1,14 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { AuthContext } from "../AuthContext.jsx";
+import { AuthContext } from "../../AuthContext.jsx";
 import {
   getCommentsByPostId,
   createComment,
   updateComment,
   deleteComment,
-} from "../api/CommentsAPI";
+} from "../../api/CommentsAPI.js";
 
-import AddCommentForm from "./AddCommentForm";
-import CommentsList from "./CommentsList";
+import AddCommentForm from "./AddCommentForm.jsx";
+import CommentsList from "./CommentsList.jsx";
 
 import "./Comments.css";
 
